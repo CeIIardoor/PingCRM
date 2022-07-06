@@ -11,13 +11,13 @@ class Account extends Model
         return $this->hasMany(User::class);
     }
 
-    public function organizations()
+    public function organisations()
     {
-        return $this->hasMany(Organization::class);
+        return $this->hasMany(Organisation::class);
     }
 
-    public function contacts()
+    public function collaborateurs()
     {
-        return $this->hasMany(Contact::class);
+        return $this->hasMany(Collaborateur::class);
     }
 }

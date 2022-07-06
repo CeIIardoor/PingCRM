@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\Assert;
 use Tests\TestCase;
 
-class OrganizationsTest extends TestCase
+class OrganisationsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -24,7 +24,7 @@ class OrganizationsTest extends TestCase
             'owner' => true,
         ]);
 
-        $this->user->account->organizations()->createMany([
+        $this->user->account->organisations()->createMany([
             [
                 'name' => 'Apple',
                 'email' => 'info@apple.com',
@@ -47,21 +47,21 @@ class OrganizationsTest extends TestCase
         ]);
     }
 
-    public function test_can_view_organizations()
+    public function test_can_view_organisations()
     {
         $this->actingAs($this->user)
-            ->get('/organizations')
+            ->get('/organisations')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Organizations/Index')
-                ->has('organizations.data', 2)
-                ->has('organizations.data.0', fn (Assert $assert) => $assert
+                ->component('Organisations/Index')
+                ->has('organisations.data', 2)
+                ->has('organisations.data.0', fn (Assert $assert) => $assert
                     ->where('id', 1)
                     ->where('name', 'Apple')
                     ->where('phone', '647-943-4400')
                     ->where('city', 'Toronto')
                     ->where('deleted_at', null)
                 )
-                ->has('organizations.data.1', fn (Assert $assert) => $assert
+                ->has('organisations.data.1', fn (Assert $assert) => $assert
                     ->where('id', 2)
                     ->where('name', 'Microsoft')
                     ->where('phone', '877-568-2495')
@@ -71,15 +71,15 @@ class OrganizationsTest extends TestCase
             );
     }
 
-    public function test_can_search_for_organizations()
+    public function test_can_search_for_organisations()
     {
         $this->actingAs($this->user)
-            ->get('/organizations?search=Apple')
+            ->get('/organisations?search=Apple')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Organizations/Index')
+                ->component('Organisations/Index')
                 ->where('filters.search', 'Apple')
-                ->has('organizations.data', 1)
-                ->has('organizations.data.0', fn (Assert $assert) => $assert
+                ->has('organisations.data', 1)
+                ->has('organisations.data.0', fn (Assert $assert) => $assert
                     ->where('id', 1)
                     ->where('name', 'Apple')
                     ->where('phone', '647-943-4400')
@@ -89,30 +89,30 @@ class OrganizationsTest extends TestCase
             );
     }
 
-    public function test_cannot_view_deleted_organizations()
+    public function test_cannot_view_deleted_organisations()
     {
-        $this->user->account->organizations()->firstWhere('name', 'Microsoft')->delete();
+        $this->user->account->organisations()->firstWhere('name', 'Microsoft')->delete();
 
         $this->actingAs($this->user)
-            ->get('/organizations')
+            ->get('/organisations')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Organizations/Index')
-                ->has('organizations.data', 1)
-                ->where('organizations.data.0.name', 'Apple')
+                ->component('Organisations/Index')
+                ->has('organisations.data', 1)
+                ->where('organisations.data.0.name', 'Apple')
             );
     }
 
-    public function test_can_filter_to_view_deleted_organizations()
+    public function test_can_filter_to_view_deleted_organisations()
     {
-        $this->user->account->organizations()->firstWhere('name', 'Microsoft')->delete();
+        $this->user->account->organisations()->firstWhere('name', 'Microsoft')->delete();
 
         $this->actingAs($this->user)
-            ->get('/organizations?trashed=with')
+            ->get('/organisations?trashed=with')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Organizations/Index')
-                ->has('organizations.data', 2)
-                ->where('organizations.data.0.name', 'Apple')
-                ->where('organizations.data.1.name', 'Microsoft')
+                ->component('Organisations/Index')
+                ->has('organisations.data', 2)
+                ->where('organisations.data.0.name', 'Apple')
+                ->where('organisations.data.1.name', 'Microsoft')
             );
     }
 }

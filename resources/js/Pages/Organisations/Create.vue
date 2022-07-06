@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Head title="Create Organization" />
+    <Head title="Create Organisation" />
     <h1 class="mb-8 text-3xl font-bold">
-      <Link class="text-indigo-400 hover:text-indigo-600" href="/organizations">Organizations</Link>
+      <Link class="text-indigo-400 hover:text-indigo-600" href="/organisations">Organisations</Link>
       <span class="text-indigo-400 font-medium">/</span> Create
     </h1>
     <div class="max-w-3xl bg-white rounded-md shadow overflow-hidden">
@@ -22,7 +22,7 @@
           <text-input v-model="form.postal_code" :error="form.errors.postal_code" class="pb-8 pr-6 w-full lg:w-1/2" label="Postal code" />
         </div>
         <div class="flex items-center justify-end px-8 py-4 bg-gray-50 border-t border-gray-100">
-          <loading-button :loading="form.processing" class="btn-indigo" type="submit">Create Organization</loading-button>
+          <loading-button :loading="form.processing" class="btn-indigo" type="submit">Create Organisation</loading-button>
         </div>
       </form>
     </div>
@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     store() {
-      this.form.post('/organizations')
+      this.form.post('/organisations')
     },
   },
 }

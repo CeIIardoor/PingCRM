@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class OrganizationFactory extends Factory
+class CollaborateurFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,13 +14,14 @@ class OrganizationFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->company,
-            'email' => $this->faker->companyEmail,
-            'phone' => $this->faker->tollFreePhoneNumber,
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'email' => $this->faker->unique()->safeEmail,
+            'phone' => $this->faker->numerify("+212 6 ## ## ## ##"),
             'address' => $this->faker->streetAddress,
             'city' => $this->faker->city,
-            'region' => $this->faker->state,
-            'country' => 'US',
+            'region' => $this->faker->region,
+            'country' => 'FR',
             'postal_code' => $this->faker->postcode,
         ];
     }

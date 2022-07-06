@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Organization extends Model
+class Abonnement extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -16,9 +16,9 @@ class Organization extends Model
         return $this->where($field ?? 'id', $value)->withTrashed()->firstOrFail();
     }
 
-    public function contacts()
+    public function collaborateurs()
     {
-        return $this->hasMany(Contact::class);
+        return $this->hasMany(Collaborateur::class);
     }
 
     public function scopeFilter($query, array $filters)

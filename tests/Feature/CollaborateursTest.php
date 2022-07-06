@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\Assert;
 use Tests\TestCase;
 
-class ContactsTest extends TestCase
+class CollaborateursTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -24,11 +24,11 @@ class ContactsTest extends TestCase
             'owner' => true,
         ]);
 
-        $organization = $this->user->account->organizations()->create(['name' => 'Example Organization Inc.']);
+        $organisation = $this->user->account->organisations()->create(['name' => 'Example Organisation Inc.']);
 
-        $this->user->account->contacts()->createMany([
+        $this->user->account->collaborateurs()->createMany([
             [
-                'organization_id' => $organization->id,
+                'organisation_id' => $organisation->id,
                 'first_name' => 'Martin',
                 'last_name' => 'Abbott',
                 'email' => 'martin.abbott@example.com',
@@ -39,7 +39,7 @@ class ContactsTest extends TestCase
                 'country' => 'US',
                 'postal_code' => '57851',
             ], [
-                'organization_id' => $organization->id,
+                'organisation_id' => $organisation->id,
                 'first_name' => 'Lynn',
                 'last_name' => 'Kub',
                 'email' => 'lynn.kub@example.com',
@@ -53,81 +53,81 @@ class ContactsTest extends TestCase
         ]);
     }
 
-    public function test_can_view_contacts()
+    public function test_can_view_collaborateurs()
     {
         $this->actingAs($this->user)
-            ->get('/contacts')
+            ->get('/collaborateurs')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Contacts/Index')
-                ->has('contacts.data', 2)
-                ->has('contacts.data.0', fn (Assert $assert) => $assert
+                ->component('Collaborateurs/Index')
+                ->has('collaborateurs.data', 2)
+                ->has('collaborateurs.data.0', fn (Assert $assert) => $assert
                     ->where('id', 1)
                     ->where('name', 'Martin Abbott')
                     ->where('phone', '555-111-2222')
                     ->where('city', 'Murphyland')
                     ->where('deleted_at', null)
-                    ->has('organization', fn (Assert $assert) => $assert
-                        ->where('name', 'Example Organization Inc.')
+                    ->has('organisation', fn (Assert $assert) => $assert
+                        ->where('name', 'Example Organisation Inc.')
                     )
                 )
-                ->has('contacts.data.1', fn (Assert $assert) => $assert
+                ->has('collaborateurs.data.1', fn (Assert $assert) => $assert
                     ->where('id', 2)
                     ->where('name', 'Lynn Kub')
                     ->where('phone', '555-333-4444')
                     ->where('city', 'Woodstock')
                     ->where('deleted_at', null)
-                    ->has('organization', fn (Assert $assert) => $assert
-                        ->where('name', 'Example Organization Inc.')
+                    ->has('organisation', fn (Assert $assert) => $assert
+                        ->where('name', 'Example Organisation Inc.')
                     )
                 )
             );
     }
 
-    public function test_can_search_for_contacts()
+    public function test_can_search_for_collaborateurs()
     {
         $this->actingAs($this->user)
-            ->get('/contacts?search=Martin')
+            ->get('/collaborateurs?search=Martin')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Contacts/Index')
+                ->component('Collaborateurs/Index')
                 ->where('filters.search', 'Martin')
-                ->has('contacts.data', 1)
-                ->has('contacts.data.0', fn (Assert $assert) => $assert
+                ->has('collaborateurs.data', 1)
+                ->has('collaborateurs.data.0', fn (Assert $assert) => $assert
                     ->where('id', 1)
                     ->where('name', 'Martin Abbott')
                     ->where('phone', '555-111-2222')
                     ->where('city', 'Murphyland')
                     ->where('deleted_at', null)
-                    ->has('organization', fn (Assert $assert) => $assert
-                        ->where('name', 'Example Organization Inc.')
+                    ->has('organisation', fn (Assert $assert) => $assert
+                        ->where('name', 'Example Organisation Inc.')
                     )
                 )
             );
     }
 
-    public function test_cannot_view_deleted_contacts()
+    public function test_cannot_view_deleted_collaborateurs()
     {
-        $this->user->account->contacts()->firstWhere('first_name', 'Martin')->delete();
+        $this->user->account->collaborateurs()->firstWhere('first_name', 'Martin')->delete();
 
         $this->actingAs($this->user)
-            ->get('/contacts')
+            ->get('/collaborateurs')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Contacts/Index')
-                ->has('contacts.data', 1)
-                ->where('contacts.data.0.name', 'Lynn Kub')
+                ->component('Collaborateurs/Index')
+                ->has('collaborateurs.data', 1)
+                ->where('collaborateurs.data.0.name', 'Lynn Kub')
             );
     }
 
-    public function test_can_filter_to_view_deleted_contacts()
+    public function test_can_filter_to_view_deleted_collaborateurs()
     {
-        $this->user->account->contacts()->firstWhere('first_name', 'Martin')->delete();
+        $this->user->account->collaborateurs()->firstWhere('first_name', 'Martin')->delete();
 
         $this->actingAs($this->user)
-            ->get('/contacts?trashed=with')
+            ->get('/collaborateurs?trashed=with')
             ->assertInertia(fn (Assert $assert) => $assert
-                ->component('Contacts/Index')
-                ->has('contacts.data', 2)
-                ->where('contacts.data.0.name', 'Martin Abbott')
-                ->where('contacts.data.1.name', 'Lynn Kub')
+                ->component('Collaborateurs/Index')
+                ->has('collaborateurs.data', 2)
+                ->where('collaborateurs.data.0.name', 'Martin Abbott')
+                ->where('collaborateurs.data.1.name', 'Lynn Kub')
             );
     }
 }
